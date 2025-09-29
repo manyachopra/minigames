@@ -115,3 +115,15 @@ function createpipes() {
         }
     }, 20);
 }
+game.addEventListener("touchstart", () => {
+    if (!gamestarted) {
+        startgame();
+        createpipes();
+        gamestarted = true;
+    }
+    if (!gameover) {
+        birdheight -= 47;
+        bird.style.top = birdheight + "px";
+    }
+});
+

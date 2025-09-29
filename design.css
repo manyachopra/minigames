@@ -63,7 +63,93 @@ h1 {
 
 .replay:hover{
     cursor: pointer;
-    transform: scale(1.1);
-   
-    
+    transform: scale(1.1);  
+}
+/* phone */
+@media screen and (max-width: 480px) {
+    h1 {
+        font-size: 28px;
+    }
+
+    .score {
+        font-size: 18px;
+    }
+
+    .container {
+        width: 90vw;
+        height: 70vh;
+    }
+
+    .bird-container {
+        width: 30px;
+        height: 30px;
+        top: 30%;
+    }
+
+    .pipe {
+        width: 12vw;
+    }
+
+    .replay {
+        font-size: 14px;
+        padding: 4px 8px;
+    }
+}
+
+/* tablet */
+@media screen and (max-width: 768px) and (min-width: 481px) {
+    h1 {
+        font-size: 36px;
+    }
+
+    .score {
+        font-size: 22px;
+    }
+
+    .container {
+        width: 300px;
+        height: 400px;
+    }
+
+    .bird-container {
+        width: 35px;
+        height: 35px;
+        top: 35%;
+    }
+
+    .pipe {
+        width: 40px;
+    }
+
+    .replay {
+        font-size: 16px;
+    }
+}
+/* desktop */
+@media screen and (min-width: 1200px) {
+    .container {
+        width: 500px;
+        height: 600px;
+    }
+
+    .bird-container {
+        width: 50px;
+        height: 50px;
+    }
+
+    .pipe {
+        width: 60px;
+    }
+
+    h1 {
+        font-size: 56px;
+    }
+
+    .score {
+        font-size: 30px;
+    }
+
+    .replay {
+        font-size: 20px;
+    }
 }

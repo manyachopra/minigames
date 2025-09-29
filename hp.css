@@ -48,9 +48,10 @@ button:hover{
     transform: scale(1.1);
     background-color: rgb(100, 143, 66);
 }
+/* phone */
 @media screen and (max-width: 768px) {
     body {
-        height: auto; /* allow scrolling */
+        height: auto;
         padding: 20px;
     }
 
@@ -61,12 +62,12 @@ button:hover{
     }
 
     .game {
-        width: 100%; /* full width for mobile */
-        max-width: 350px; /* limit so it doesn’t stretch too much */
+        width: 100%; 
+        max-width: 350px; 
     }
 }
 
-/* 🖥 Medium devices (tablets) */
+/* tablet */
 @media screen and (max-width: 1024px) {
     .game-container {
         gap: 30px;
