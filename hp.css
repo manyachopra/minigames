@@ -48,3 +48,31 @@ button:hover{
     transform: scale(1.1);
     background-color: rgb(100, 143, 66);
 }
+@media screen and (max-width: 768px) {
+    body {
+        height: auto; /* allow scrolling */
+        padding: 20px;
+    }
+
+    .game-container {
+        flex-direction: column;
+        gap: 20px;
+        padding: 0;
+    }
+
+    .game {
+        width: 100%; /* full width for mobile */
+        max-width: 350px; /* limit so it doesn’t stretch too much */
+    }
+}
+
+/* 🖥 Medium devices (tablets) */
+@media screen and (max-width: 1024px) {
+    .game-container {
+        gap: 30px;
+    }
+
+    .game {
+        width: 200px; /* slightly smaller cards for mid-sized screens */
+    }
+}
