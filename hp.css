@@ -1,0 +1,50 @@
+body {
+    background-image: linear-gradient(to right, rgb(114, 114, 219), rgb(208, 135, 121), rgb(113, 227, 183));
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    font-family: dela gothic one;
+}
+h1,h3{
+    margin: 0;
+}
+.main {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+}
+
+.game-container {
+    display: flex;
+    padding: 0 30px 0 30px;
+    align-items: stretch;
+    gap: 50px;
+}
+
+.game {
+    display: flex;
+    flex-direction: column;
+    font-family: poppins;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    border-radius: 20px;
+    width: 250px;
+    justify-content: space-between;
+
+}
+button{
+    padding: 10px 16px 10px 16px;
+    border-radius: 15px;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.707);
+    color: rgba(255, 255, 255, 0.826);
+    transition: background-color ease-in-out 0.4s,transform ease-in-out 0.4s;
+}
+button:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+    background-color: rgb(100, 143, 66);
+}

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Whack-a-Mole — Debug Version</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+
+    html { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: inherit; }
+
+    body {
+      font-family: 'Shadows Into Light', cursive;
+      font-size: 16px;
+      margin: 0;
+      padding: 1rem;
+      color: #333;
+      background: linear-gradient(to right, #f2f2f2, #e0e0e0);
+      text-align: center;
+    }
+
+    h1.title { font-size: 2.0rem; margin: 0.25rem 0; }
+    .score { font-size: 1.6rem; color: rgb(104,94,114); margin: 0.25rem 0 1rem; }
+
+    .start { margin-bottom: 1rem; }
+    #start-btn { padding: 0.5rem 1rem; font-size: 1rem; cursor: pointer; }
+
+    .game {
+      width: 360px;
+      margin: 0.5rem auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .hole {
+      width: calc(33.33% - 4px);
+      height: 120px;
+      background: #dfe6e9;
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 -20px 30px rgba(0,0,0,0.06);
+    }
+
+    .hole::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 100%;
+      height: 36px;
+      background: url('dirt.jpg') bottom center no-repeat;
+      background-size: contain;
+      opacity: 0.95;
+      pointer-events: none;
+    }
+
+    /* mole visual: image if available, otherwise colored circle so you always see it */
+    .mole {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70%;
+      height: 70%;
+      top: 110%;                 /* hidden (below) when not up */
+      border-radius: 50%;
+      transition: top 0.35s ease;
+      z-index: 5;
+      pointer-events: auto;
+      background-color: #7b4b34; /* fallback visible color */
+      background-image: url('mole.jpg');
+      background-position: center bottom;
+      background-repeat: no-repeat;
+      background-size: contain;
+      cursor: pointer;
+    }
+
+    .hole.up .mole { top: 15%; } /* visible when pop-up */
+  </style>
+</head>
+<body>
+  <h1 class="title">Whack-a-Mole Game</h1>
+  <div class="score">Score: <span id="scoreVal">0</span></div>
+
+  <div class="start">
+    <button id="start-btn">Start!</button>
+  </div>
+
+  <div class="game" id="board">
+    <!-- 9 holes -->
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+  </div>
+
+  <script>
+    (function () {
+      const holes = document.querySelectorAll('.hole');
+      const scoreSpan = document.getElementById('scoreVal');
+      const moles = document.querySelectorAll('.mole');
+      const startBtn = document.getElementById('start-btn');
+
+      let lastHole;
+      let timeUp = false;
+      let score = 0;
+      let gameTimer = null;
+
+      function randomTime(min, max) {
+        return Math.round(Math.random() * (max - min) + min);
+      }
+
+      function randomHole(list) {
+        if (!list || list.length === 0) return null;
+        const idx = Math.floor(Math.random() * list.length);
+        const hole = list[idx];
+        if (hole === lastHole && list.length > 1) {
+          return randomHole(list);
+        }
+        lastHole = hole;
+        return hole;
+      }
+
+      function peep() {
+        if (timeUp) return;
+        const time = randomTime(1200, 2000);
+        const hole = randomHole(holes);
+        if (!hole) {
+          console.error('No holes found — check your selectors or HTML structure.');
+          return;
+        }
+        const index = Array.from(holes).indexOf(hole);
+        console.log('peep -> index:', index, 'time:', time);
+        hole.classList.add('up');
+
+        setTimeout(() => {
+          hole.classList.remove('up');
+          if (!timeUp) peep();
+        }, time);
+      }
+
+      function startGame() {
+        console.clear();
+        console.log('startGame called');
+        if (!holes.length) {
+          console.error('startGame: No holes in DOM. Check that .hole elements exist BEFORE the script runs.');
+          return;
+        }
+        score = 0;
+        scoreSpan.textContent = score;
+        timeUp = false;
+        clearTimeout(gameTimer);
+        startBtn.disabled = true;
+        peep();
+        // stop after 10s
+        gameTimer = setTimeout(() => {
+          timeUp = true;
+          startBtn.disabled = false;
+          console.log('Game ended. Final score:', score);
+        }, 10000);
+      }
+
+      function whack(e) {
+        if (!e.isTrusted) {
+          // protect against programmatic clicks in devtools or tests
+          console.warn('Ignored untrusted click');
+          return;
+        }
+        const hole = this.closest('.hole');
+        if (!hole) return;
+        if (!hole.classList.contains('up')) {
+          // optional: ignore clicks when mole not up
+          return;
+        }
+        score++;
+        hole.classList.remove('up');
+        scoreSpan.textContent = score;
+        console.log('whack! score ->', score);
+      }
+
+      // attach listeners
+      startBtn.addEventListener('click', startGame);
+      moles.forEach(m => m.addEventListener('click', whack));
+
+      // helpful debug info visible in console immediately
+      console.log('Debug ready — click Start. If nothing happens, check console for errors.');
+    })();
+  </script>
+</body>
+</html>
+
